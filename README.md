@@ -34,7 +34,51 @@ def create_app():
     return app
 ```
 
-## 3. Setting Up a GitHub Action Workflow
+## 3. Use Models in Your Flask App
+
+You can now import and use the models from shared_models in your routes and other parts of your Flask project.
+
+```python
+from flask import Blueprint, request, jsonify
+from shared_models.models import AirNomads, db
+
+main = Blueprint('main', __name__)
+
+@main.route('/add_air_nomad', methods=['POST'])
+def add_air_nomad():
+    data = request.json
+    new_nomad = AirNomads(
+        username=data['username'],
+        email=data['email'],
+        departure_city=data['departure_city'],
+        departure_iata=data['departure_iata'],
+        currency=data['currency'],
+        min_nights=data['min_nights'],
+        max_nights=data['max_nights'],
+        travel_countries=data['travel_countries']
+    )
+    db.session.add(new_nomad)
+    db.session.commit()
+    return jsonify({"message": "Air Nomad added successfully"}), 201
+```
+## 4. Best Practices
+
+Environment Variables: Use a .env file or another method to store sensitive configurations like the SQLALCHEMY_DATABASE_URI.
+Database Migrations: Consider using Flask-Migrate for managing database schema changes.
+```bash
+pip install Flask-Migrate
+```
+```python
+from flask_migrate import Migrate
+migrate = Migrate(app, db)
+```
+```bash 
+flask db init
+flask db migrate -m "Initial migration"
+flask db upgrade
+```
+
+## 5. Setting Up a GitHub Action Workflow
 
 Create a GitHub Actions workflow that listens for changes in the shared_models repository. When changes are detected, the workflow will reinstall the repository, commit the updated code, and push it to your Flask project.
 
