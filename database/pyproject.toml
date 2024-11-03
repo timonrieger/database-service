@@ -1,0 +1,15 @@
+[project]
+name = "database-service"
+description = "Shared Database for flask apps"
+requires-python = ">=3.10"
+license = {text = "MIT License"}
+authors = [{name = "Timon Rieger", email = "timon@riegerx.de"}]
+version = "1.0.0"
+dependencies = [
+    "flask_sqlalchemy==3.1.1",
+    "SQLAlchemy==2.0.29",
+]
+
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"

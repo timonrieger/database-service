@@ -7,7 +7,7 @@ This guide will walk you through installing the `shared_models` repository in yo
 To install the `shared_models` repository directly from GitHub, use the following command:
 
 ```bash
-pip install git+ssh://git@github.com/yourusername/shared_models.git
+ pip install git+ssh://git@github.com/timonrieger/database-service.git
 ```
 
 ## 2. Calling the create_db Function
