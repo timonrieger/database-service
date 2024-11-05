@@ -6,8 +6,8 @@ license = {text = "MIT License"}
 authors = [{name = "Timon Rieger", email = "timon@riegerx.de"}]
 version = "1.1.0"
 dependencies = [
-    "flask_sqlalchemy>=3.0.0",
-    "SQLAlchemy>=2.0.3",
-    "Flask>=3.0.0",
-    "flask-migrate>=3.0.0",
+    "flask_sqlalchemy",
+    "SQLAlchemy",
+    "Flask",
+    "flask-migrate",
 ]
