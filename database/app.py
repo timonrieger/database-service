@@ -117,7 +117,6 @@ class Ressources(db.Model):
     medium: Mapped[str] = mapped_column(String, nullable=False)
     category: Mapped[str] = mapped_column(String, nullable=False)
     topic: Mapped[str] = mapped_column(String, nullable=False)
-    votes: Mapped[int] = mapped_column(Integer, default=0)
     tags: Mapped[str] = mapped_column(String, default=json.dumps([]))
     user_id: Mapped[str] = mapped_column(Integer, db.ForeignKey("users.id"))
     added: Mapped[datetime] = mapped_column(DateTime, default=func.current_timestamp(), nullable=True)
