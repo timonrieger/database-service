@@ -130,7 +130,6 @@ class Ressources(db.Model):
             "medium": self.medium,
             "category": self.category,
             "topic": self.topic,
-            "votes": self.votes,
             "tags": json.loads(self.tags),
             "user_id": self.user_id,
             "added": self.added,
