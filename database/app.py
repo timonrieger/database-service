@@ -1,6 +1,8 @@
+from datetime import datetime
+import json
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import Mapped, mapped_column
-from sqlalchemy import Integer, String, Float
+from sqlalchemy import Integer, String, Float, DateTime, func
 from flask_migrate import Migrate
 from flask import Flask 
 from dotenv import load_dotenv
@@ -104,6 +106,33 @@ class User(db.Model):
             "username": self.username,
             "confirmed": self.confirmed,
             "token": self.token
+        }
+        
+        
+class Ressources(db.Model):
+    __tablename__ = "ressources"
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    name: Mapped[str] = mapped_column(String, nullable=False)
+    link: Mapped[str] = mapped_column(String, nullable=False, unique=True)
+    medium: Mapped[str] = mapped_column(String, nullable=False)
+    category: Mapped[str] = mapped_column(String, nullable=False)
+    topic: Mapped[str] = mapped_column(String, nullable=False)
+    votes: Mapped[int] = mapped_column(Integer, default=0)
+    tags: Mapped[str] = mapped_column(String, default=json.dumps([]))
+    user_id: Mapped[str] = mapped_column(Integer, db.ForeignKey("users.id"))
+    added: Mapped[datetime] = mapped_column(DateTime, default=func.current_timestamp(), nullable=True)
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "name": self.name,
+            "link": self.link,
+            "medium": self.medium,
+            "category": self.category,
+            "topic": self.topic,
+            "votes": self.votes,
+            "tags": json.loads(self.tags),
+            "user_id": self.user_id
         }
 
 
