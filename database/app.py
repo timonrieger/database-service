@@ -2,7 +2,7 @@ from datetime import datetime
 import json
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import Mapped, mapped_column
-from sqlalchemy import Integer, String, Float, DateTime, func
+from sqlalchemy import Integer, String, Float, DateTime, func, Boolean
 from flask_migrate import Migrate
 from flask import Flask 
 from dotenv import load_dotenv
@@ -121,6 +121,7 @@ class Ressources(db.Model):
     user_id: Mapped[str] = mapped_column(Integer, db.ForeignKey("users.id"))
     added: Mapped[datetime] = mapped_column(DateTime, default=func.current_timestamp(), nullable=True)
     description: Mapped[str] = mapped_column(String, nullable=True)
+    private: Mapped[bool] = mapped_column(Boolean, default=False)
 
     def to_dict(self):
         return {
@@ -133,7 +134,8 @@ class Ressources(db.Model):
             "tags": json.loads(self.tags),
             "user_id": self.user_id,
             "added": self.added,
-            "description": self.description
+            "description": self.description,
+            "private": self.private
         }
 
 
