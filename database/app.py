@@ -121,6 +121,7 @@ class Ressources(db.Model):
     tags: Mapped[str] = mapped_column(String, default=json.dumps([]))
     user_id: Mapped[str] = mapped_column(Integer, db.ForeignKey("users.id"))
     added: Mapped[datetime] = mapped_column(DateTime, default=func.current_timestamp(), nullable=True)
+    description: Mapped[str] = mapped_column(String, nullable=True)
 
     def to_dict(self):
         return {
@@ -132,7 +133,9 @@ class Ressources(db.Model):
             "topic": self.topic,
             "votes": self.votes,
             "tags": json.loads(self.tags),
-            "user_id": self.user_id
+            "user_id": self.user_id,
+            "added": self.added,
+            "description": self.description
         }
 
 
