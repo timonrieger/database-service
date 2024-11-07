@@ -97,6 +97,7 @@ class User(db.Model):
     username: Mapped[str] = mapped_column(String(150))
     confirmed: Mapped[int] = mapped_column(Integer, default=0)
     token: Mapped[str] = mapped_column(String, unique=True)
+    admin: Mapped[bool] = mapped_column(Boolean, default=False, nullable=True)
 
     def to_dict(self):
         return {
@@ -105,7 +106,8 @@ class User(db.Model):
             "password": self.password,
             "username": self.username,
             "confirmed": self.confirmed,
-            "token": self.token
+            "token": self.token,
+            "admin": self.admin
         }
         
         
@@ -121,7 +123,7 @@ class Ressources(db.Model):
     user_id: Mapped[str] = mapped_column(Integer, db.ForeignKey("users.id"))
     added: Mapped[datetime] = mapped_column(DateTime, default=func.current_timestamp(), nullable=True)
     description: Mapped[str] = mapped_column(String, nullable=True)
-    private: Mapped[bool] = mapped_column(Boolean, default=False)
+    private: Mapped[bool] = mapped_column(Boolean, default=False, nullable=True)
 
     def to_dict(self):
         return {
