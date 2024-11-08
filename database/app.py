@@ -118,7 +118,6 @@ class Ressources(db.Model):
     link: Mapped[str] = mapped_column(String, nullable=False, unique=True)
     medium: Mapped[str] = mapped_column(String, nullable=False)
     category: Mapped[str] = mapped_column(String, nullable=False)
-    topic: Mapped[str] = mapped_column(String, nullable=False)
     tags: Mapped[str] = mapped_column(String, default=json.dumps([]))
     user_id: Mapped[str] = mapped_column(Integer, db.ForeignKey("users.id"))
     added: Mapped[datetime] = mapped_column(DateTime, default=func.current_timestamp(), nullable=True)
@@ -132,7 +131,6 @@ class Ressources(db.Model):
             "link": self.link,
             "medium": self.medium,
             "category": self.category,
-            "topic": self.topic,
             "tags": json.loads(self.tags),
             "user_id": self.user_id,
             "added": self.added,
