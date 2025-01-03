@@ -3,8 +3,8 @@ name = "database-service"
 description = "Shared database for flask apps"
 requires-python = ">=3.10"
 license = {text = "MIT License"}
-authors = [{name = "Timon Rieger", email = "timon@riegerx.de"}]
-version = "1.1.0"
+authors = [{name = "Timon Rieger", email = "work@timonrieger.de"}]
+version = "1.2.0"
 dependencies = [
     "flask_sqlalchemy",
     "SQLAlchemy",

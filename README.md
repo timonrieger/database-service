@@ -5,7 +5,6 @@
 - Centralized database management for multiple Flask applications.
 - Easy integration with SQLAlchemy ORM.
 - Support for database migrations using Flask-Migrate.
-- Environment variable configuration for sensitive data.
 
 ## Requirements
 

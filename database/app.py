@@ -80,6 +80,7 @@ class User(db.Model):
     confirmed: Mapped[int] = mapped_column(Integer, default=0)
     token: Mapped[str] = mapped_column(String, unique=True)
     admin: Mapped[bool] = mapped_column(Boolean, default=False, nullable=True)
+    apikey: Mapped[str] = mapped_column(String, nullable=True)
 
     def to_dict(self):
         return {
@@ -89,7 +90,8 @@ class User(db.Model):
             "username": self.username,
             "confirmed": self.confirmed,
             "token": self.token,
-            "admin": self.admin
+            "admin": self.admin,
+            "apikey": self.apikey
         }
         
         
