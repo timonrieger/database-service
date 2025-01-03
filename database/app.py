@@ -115,7 +115,7 @@ class Ressources(db.Model):
             "link": self.link,
             "medium": self.medium,
             "category": self.category,
-            "tags": json.loads(self.tags),
+            "tags": self.tags,
             "user_id": self.user_id,
             "added": self.added,
             "description": self.description,
