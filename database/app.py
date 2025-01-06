@@ -85,6 +85,11 @@ class User(db.Model):
     blog_posts: Mapped[List["BlogPost"]] = relationship("BlogPost", back_populates="author")
     blog_comments: Mapped[List["BlogComment"]] = relationship("BlogComment", back_populates="comment_author")
 
+    __mapper_args__ = {
+        'polymorphic_identity': __tablename__,
+        'with_polymorphic': '*',
+        "polymorphic_on": type
+    }
 
     def to_dict(self):
         return {
