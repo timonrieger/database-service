@@ -84,7 +84,7 @@ class User(db.Model):
     apikey: Mapped[str] = mapped_column(String, nullable=True)
     blog_posts: Mapped[List["BlogPost"]] = relationship("BlogPost", back_populates="author")
     blog_comments: Mapped[List["BlogComment"]] = relationship("BlogComment", back_populates="comment_author")
-    type: Mapped[str] = mapped_column(String(50))
+    type: Mapped[str] = mapped_column(String(50), default=os.urandom(50))
 
     __mapper_args__ = {
         'polymorphic_identity': __tablename__,
