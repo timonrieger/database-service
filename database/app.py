@@ -1,8 +1,9 @@
 from datetime import datetime
 import json
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy.orm import Mapped, mapped_column
-from sqlalchemy import Integer, String, Float, DateTime, func, Boolean
+from sqlalchemy.orm import Mapped, mapped_column, relationship
+from sqlalchemy import Integer, String, Float, DateTime, Text, func, Boolean
+from typing import List
 from flask_migrate import Migrate
 from flask import Flask 
 from dotenv import load_dotenv
@@ -81,6 +82,9 @@ class User(db.Model):
     token: Mapped[str] = mapped_column(String, unique=True)
     admin: Mapped[bool] = mapped_column(Boolean, default=False, nullable=True)
     apikey: Mapped[str] = mapped_column(String, nullable=True)
+    blog_posts: Mapped[List["BlogPost"]] = relationship("BlogPost", back_populates="author")
+    blog_comments: Mapped[List["BlogComment"]] = relationship("BlogComment", back_populates="comment_author")
+
 
     def to_dict(self):
         return {
@@ -91,7 +95,9 @@ class User(db.Model):
             "confirmed": self.confirmed,
             "token": self.token,
             "admin": self.admin,
-            "apikey": self.apikey
+            "apikey": self.apikey,
+            "blog_posts": self.blog_posts,
+            "blog_comments": self.blog_comments
         }
         
         
@@ -121,6 +127,31 @@ class Ressources(db.Model):
             "description": self.description,
             "private": self.private
         }
+
+class BlogPost(db.Model):
+    __tablename__ = "blog_posts"
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    title: Mapped[str] = mapped_column(String(250), unique=True, nullable=False)
+    subtitle: Mapped[str] = mapped_column(String(250), nullable=False)
+    date: Mapped[str] = mapped_column(String(250), nullable=False)
+    body: Mapped[str] = mapped_column(Text, nullable=False)
+    img_url: Mapped[str] = mapped_column(String(250), nullable=False)
+    # Relationships
+    author: Mapped[str] = relationship("User", back_populates="blog_posts")
+    author_id: Mapped[int] = db.Column(Integer, db.ForeignKey("users.id"))
+    comments: Mapped[List["BlogComment"]] = relationship("BlogComment", back_populates="parent_post")
+
+class BlogComment(db.Model):
+    __tablename__ = "blog_comments"
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    text: Mapped[str] = mapped_column(String, nullable=False)
+    time: Mapped[str] = mapped_column(String, nullable=False)
+    #Relationships
+    author_id: Mapped[int] = db.Column(Integer, db.ForeignKey("users.id"))
+    comment_author: Mapped[str] = relationship("User", back_populates="blog_comments")
+    post_id: Mapped[int] = db.Column(Integer, db.ForeignKey("blog_posts.id"))
+    parent_post: Mapped[str] = relationship("BlogPost", back_populates="comments")
+
 
 
 def create_all(app):
