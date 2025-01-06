@@ -132,6 +132,7 @@ class BlogPost(db.Model):
     date: Mapped[str] = mapped_column(String(250), nullable=False)
     body: Mapped[str] = mapped_column(Text, nullable=False)
     img_url: Mapped[str] = mapped_column(String(250), nullable=False)
+    updated_at: Mapped[datetime] = mapped_column(DateTime, default=func.current_timestamp(), onupdate=func.current_timestamp(), nullable=True)
     # Relationships
     author_id: Mapped[int] = mapped_column(Integer, db.ForeignKey("users.id"))
     comments: Mapped[List["BlogComment"]] = relationship("BlogComment", back_populates="parent_post")
