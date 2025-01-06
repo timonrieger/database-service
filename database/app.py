@@ -1,7 +1,7 @@
 from datetime import datetime
 import json
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy.orm import Mapped, mapped_column, relationship
+from sqlalchemy.orm import Mapped, mapped_column, relationship, DeclarativeBase
 from sqlalchemy import Integer, String, Float, DateTime, Text, func, Boolean
 from typing import List
 from flask_migrate import Migrate
@@ -19,6 +19,9 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
+
+class Base(DeclarativeBase):
+    pass
 
 
 class AirNomads(db.Model):
@@ -72,7 +75,7 @@ class TopMovies(db.Model):
         }
 
 
-class User(db.Model):
+class User(Base, db.Model):
     __tablename__ = "users"
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
     email: Mapped[str] = mapped_column(String(150), unique=True)
@@ -88,8 +91,7 @@ class User(db.Model):
 
     __mapper_args__ = {
         'polymorphic_identity': __tablename__,
-        'with_polymorphic': '*',
-        "polymorphic_on": type
+        "polymorphic_on": "type"
     }
 
     def to_dict(self):
