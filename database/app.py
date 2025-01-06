@@ -136,6 +136,7 @@ class Ressources(db.Model):
             "private": self.private
         }
 
+
 class BlogPost(db.Model):
     __tablename__ = "blog_posts"
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
@@ -145,20 +146,21 @@ class BlogPost(db.Model):
     body: Mapped[str] = mapped_column(Text, nullable=False)
     img_url: Mapped[str] = mapped_column(String(250), nullable=False)
     # Relationships
-    author: Mapped[str] = relationship("User", back_populates="blog_posts")
-    author_id: Mapped[int] = db.Column(Integer, db.ForeignKey("users.id"))
+    author_id: Mapped[int] = mapped_column(Integer, db.ForeignKey("users.id"))
+    author: Mapped["User"] = relationship("User", back_populates="blog_posts")
     comments: Mapped[List["BlogComment"]] = relationship("BlogComment", back_populates="parent_post")
+
 
 class BlogComment(db.Model):
     __tablename__ = "blog_comments"
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
     text: Mapped[str] = mapped_column(String, nullable=False)
     time: Mapped[str] = mapped_column(String, nullable=False)
-    #Relationships
-    author_id: Mapped[int] = db.Column(Integer, db.ForeignKey("users.id"))
-    comment_author: Mapped[str] = relationship("User", back_populates="blog_comments")
-    post_id: Mapped[int] = db.Column(Integer, db.ForeignKey("blog_posts.id"))
-    parent_post: Mapped[str] = relationship("BlogPost", back_populates="comments")
+    # Relationships
+    author_id: Mapped[int] = mapped_column(Integer, db.ForeignKey("users.id"))
+    comment_author: Mapped["User"] = relationship("User", back_populates="blog_comments")
+    post_id: Mapped[int] = mapped_column(Integer, db.ForeignKey("blog_posts.id"))
+    parent_post: Mapped["BlogPost"] = relationship("BlogPost", back_populates="comments")
 
 
 
