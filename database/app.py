@@ -77,7 +77,7 @@ class User(db.Model):
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
     email: Mapped[str] = mapped_column(String(150), unique=True)
     password: Mapped[str] = mapped_column(String(150))
-    username: Mapped[str] = mapped_column(String(150))
+    username: Mapped[str] = mapped_column(String(150), unique=True)
     confirmed: Mapped[int] = mapped_column(Integer, default=0)
     token: Mapped[str] = mapped_column(String, unique=True)
     admin: Mapped[bool] = mapped_column(Boolean, default=False, nullable=True)
