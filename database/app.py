@@ -24,7 +24,7 @@ class Base(DeclarativeBase):
     pass
 
 
-class AirNomads(db.Model):
+class AirNomads(Base):
     __tablename__ = "air_nomads"
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
     username: Mapped[str] = mapped_column(String)
@@ -52,7 +52,7 @@ class AirNomads(db.Model):
         }
 
 
-class TopMovies(db.Model):
+class TopMovies(Base):
     __tablename__ = "top_movies"
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
     user_id: Mapped[str] = mapped_column(Integer, db.ForeignKey("users.id"))
@@ -109,7 +109,7 @@ class User(Base):
         }
         
         
-class Ressources(db.Model):
+class Ressources(Base):
     __tablename__ = "ressources"
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
     name: Mapped[str] = mapped_column(String, nullable=False)
@@ -137,7 +137,7 @@ class Ressources(db.Model):
         }
 
 
-class BlogPost(db.Model):
+class BlogPost(Base):
     __tablename__ = "blog_posts"
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
     title: Mapped[str] = mapped_column(String(250), unique=True, nullable=False)
@@ -151,7 +151,7 @@ class BlogPost(db.Model):
     comments: Mapped[List["BlogComment"]] = relationship("BlogComment", back_populates="parent_post")
 
 
-class BlogComment(db.Model):
+class BlogComment(Base):
     __tablename__ = "blog_comments"
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
     text: Mapped[str] = mapped_column(String, nullable=False)
