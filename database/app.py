@@ -133,7 +133,7 @@ class BlogPost(db.Model):
     edit_date: Mapped[str] = mapped_column(String(250), nullable=True)
     body: Mapped[str] = mapped_column(Text, nullable=False)
     img_url: Mapped[str] = mapped_column(String(250), nullable=False)
-    deleted: Mapped[bool] = mapped_column(Boolean, default=False, True)
+    deleted: Mapped[bool] = mapped_column(Boolean, default=False, nullable=True)
     # Relationships
     author_id: Mapped[int] = mapped_column(Integer, db.ForeignKey("users.id"))
     comments: Mapped[List["BlogComment"]] = relationship("BlogComment", back_populates="parent_post")
