@@ -79,6 +79,21 @@ flask db migrate
 flask db upgrade
 ```
 
+# Git Tagging Commands
+
+1. **Create a Tag**  
+   `git tag v1.4.4`
+
+2. **Push the Tag to a Remote Repository**  
+   `git push backup v1.4.4`
+
+3. **Push Both the Main Branch and the Tag**  
+   `git push -u origin main tag v1.4.4`
+
+4. **Push All Tags to the Remote Repository (Optional)**  
+   `git push --tags`
+
+
 ## License
 
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
