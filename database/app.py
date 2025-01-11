@@ -129,11 +129,11 @@ class BlogPost(db.Model):
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
     title: Mapped[str] = mapped_column(String(250), unique=True, nullable=False)
     subtitle: Mapped[str] = mapped_column(String(250), nullable=False)
-    create_date: Mapped[str] = mapped_column(String(250), nullable=True)
+    create_date: Mapped[str] = mapped_column(String(250), nullable=False)
     edit_date: Mapped[str] = mapped_column(String(250), nullable=True)
     body: Mapped[str] = mapped_column(Text, nullable=False)
     img_url: Mapped[str] = mapped_column(String(250), nullable=False)
-    deleted: Mapped[bool] = mapped_column(Boolean, default=False, nullable=True)
+    deleted: Mapped[bool] = mapped_column(Boolean, default=False)
     # Relationships
     author_id: Mapped[int] = mapped_column(Integer, db.ForeignKey("users.id"))
     comments: Mapped[List["BlogComment"]] = relationship("BlogComment", back_populates="parent_post")
@@ -143,8 +143,8 @@ class BlogComment(db.Model):
     __tablename__ = "blog_comments"
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
     text: Mapped[str] = mapped_column(String, nullable=False)
-    create_date: Mapped[str] = mapped_column(String, nullable=True)
-    deleted: Mapped[bool] = mapped_column(Boolean, default=False, nullable=True)
+    create_date: Mapped[str] = mapped_column(String, nullable=False)
+    deleted: Mapped[bool] = mapped_column(Boolean, default=False)
     # Relationships
     author_id: Mapped[int] = mapped_column(Integer, db.ForeignKey("users.id"))
     post_id: Mapped[int] = mapped_column(Integer, db.ForeignKey("blog_posts.id"))
