@@ -2,7 +2,7 @@ from datetime import datetime
 import json
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-from sqlalchemy import Integer, String, Float, DateTime, Text, func, Boolean
+from sqlalchemy import Integer, String, Float, DateTime, Text, func, Boolean, ForeignKey
 from typing import List
 from flask_migrate import Migrate
 from flask import Flask 
@@ -52,7 +52,7 @@ class AirNomads(db.Model):
 class TopMovies(db.Model):
     __tablename__ = "top_movies"
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
-    user_id: Mapped[str] = mapped_column(Integer, db.ForeignKey("users.id"))
+    user_id: Mapped[str] = mapped_column(Integer, ForeignKey("users.id"))
     title: Mapped[str] = mapped_column(String, nullable=False)
     year: Mapped[int] = mapped_column(Integer, nullable=False)
     description: Mapped[str] = mapped_column(String)
@@ -104,7 +104,7 @@ class Ressources(db.Model):
     medium: Mapped[str] = mapped_column(String, nullable=False)
     category: Mapped[str] = mapped_column(String, nullable=False)
     tags: Mapped[str] = mapped_column(String, default=json.dumps([]))
-    user_id: Mapped[str] = mapped_column(Integer, db.ForeignKey("users.id"))
+    user_id: Mapped[str] = mapped_column(Integer, ForeignKey("users.id"))
     added: Mapped[datetime] = mapped_column(DateTime, default=func.current_timestamp(), nullable=True)
     description: Mapped[str] = mapped_column(String, nullable=True)
     private: Mapped[bool] = mapped_column(Boolean, default=False, nullable=True)
@@ -133,7 +133,9 @@ class BlogPost(db.Model):
     edit_date: Mapped[str] = mapped_column(String(250), nullable=True)
     body: Mapped[str] = mapped_column(Text, nullable=False)
     img_url: Mapped[str] = mapped_column(String(250), nullable=False)
-    deleted: Mapped[bool] = mapped_column(Boolean, default=False)
+    deleted: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
+    is_draft: Mapped[bool] = mapped_column(Boolean, default=False, nullable=True)
+    tags: Mapped[str] = mapped_column(String, default=json.dumps([]), nullable=True)
     # Relationships
     author_id: Mapped[int] = mapped_column(Integer, db.ForeignKey("users.id"))
     comments: Mapped[List["BlogComment"]] = relationship("BlogComment", back_populates="parent_post")
@@ -144,10 +146,10 @@ class BlogComment(db.Model):
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
     text: Mapped[str] = mapped_column(String, nullable=False)
     create_date: Mapped[str] = mapped_column(String, nullable=False)
-    deleted: Mapped[bool] = mapped_column(Boolean, default=False)
+    deleted: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
     # Relationships
-    author_id: Mapped[int] = mapped_column(Integer, db.ForeignKey("users.id"))
-    post_id: Mapped[int] = mapped_column(Integer, db.ForeignKey("blog_posts.id"))
+    author_id: Mapped[int] = mapped_column(Integer, ForeignKey("users.id"))
+    post_id: Mapped[int] = mapped_column(Integer, ForeignKey("blog_posts.id"))
     parent_post: Mapped["BlogPost"] = relationship("BlogPost", back_populates="comments")
 
 
