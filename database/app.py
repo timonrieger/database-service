@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime as dt
 import json
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import Mapped, mapped_column, relationship
@@ -105,7 +105,7 @@ class Ressources(db.Model):
     category: Mapped[str] = mapped_column(String, nullable=False)
     tags: Mapped[str] = mapped_column(String, default=json.dumps([]))
     user_id: Mapped[str] = mapped_column(Integer, ForeignKey("users.id"))
-    added: Mapped[datetime] = mapped_column(DateTime, default=func.current_timestamp(), nullable=True)
+    added: Mapped[dt] = mapped_column(DateTime, default=func.current_timestamp(), nullable=True)
     description: Mapped[str] = mapped_column(String, nullable=True)
     private: Mapped[bool] = mapped_column(Boolean, default=False, nullable=True)
 
@@ -129,29 +129,38 @@ class BlogPost(db.Model):
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
     title: Mapped[str] = mapped_column(String(250), unique=True, nullable=False)
     subtitle: Mapped[str] = mapped_column(String(250), nullable=False)
-    create_date: Mapped[str] = mapped_column(String(250), nullable=False)
-    edit_date: Mapped[str] = mapped_column(String(250), nullable=True)
+    create_date: Mapped[dt] = mapped_column(
+        DateTime, nullable=False
+    )
+    edit_date: Mapped[dt] = mapped_column(DateTime, nullable=True)
     body: Mapped[str] = mapped_column(Text, nullable=False)
     img_url: Mapped[str] = mapped_column(String(250), nullable=False)
     deleted: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
     is_draft: Mapped[bool] = mapped_column(Boolean, default=False, nullable=True)
     tags: Mapped[str] = mapped_column(String, default=json.dumps([]), nullable=True)
+
     # Relationships
     author_id: Mapped[int] = mapped_column(Integer, db.ForeignKey("users.id"))
-    comments: Mapped[List["BlogComment"]] = relationship("BlogComment", back_populates="parent_post")
+    comments: Mapped[List["BlogComment"]] = relationship(
+        "BlogComment", back_populates="parent_post"
+    )
 
 
 class BlogComment(db.Model):
     __tablename__ = "blog_comments"
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
     text: Mapped[str] = mapped_column(String, nullable=False)
-    create_date: Mapped[str] = mapped_column(String, nullable=False)
+    create_date: Mapped[dt] = mapped_column(
+        DateTime, nullable=False
+    )
+    edited: Mapped[bool] = mapped_column(Boolean, default=False, nullable=True)
     deleted: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
     # Relationships
-    author_id: Mapped[int] = mapped_column(Integer, ForeignKey("users.id"))
-    post_id: Mapped[int] = mapped_column(Integer, ForeignKey("blog_posts.id"))
-    parent_post: Mapped["BlogPost"] = relationship("BlogPost", back_populates="comments")
-
+    author_id: Mapped[int] = mapped_column(Integer, db.ForeignKey("users.id"))
+    post_id: Mapped[int] = mapped_column(Integer, db.ForeignKey("blog_posts.id"))
+    parent_post: Mapped["BlogPost"] = relationship(
+        "BlogPost", back_populates="comments"
+    )
 
 
 def create_all(app):
