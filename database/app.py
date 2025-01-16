@@ -80,7 +80,7 @@ class User(db.Model):
     username: Mapped[str] = mapped_column(String(150), unique=True)
     confirmed: Mapped[int] = mapped_column(Integer, default=0)
     token: Mapped[str] = mapped_column(String, unique=True)
-    admin: Mapped[bool] = mapped_column(Boolean, default=False, nullable=True)
+    admin: Mapped[bool] = mapped_column(Boolean, default=False)
     apikey: Mapped[str] = mapped_column(String, nullable=True)
 
     def to_dict(self):
@@ -107,7 +107,7 @@ class Ressources(db.Model):
     user_id: Mapped[str] = mapped_column(Integer, ForeignKey("users.id"))
     added: Mapped[dt] = mapped_column(DateTime, default=func.current_timestamp(), nullable=True)
     description: Mapped[str] = mapped_column(String, nullable=True)
-    private: Mapped[bool] = mapped_column(Boolean, default=False, nullable=True)
+    private: Mapped[bool] = mapped_column(Boolean, default=False)
 
     def to_dict(self):
         return {
@@ -135,9 +135,9 @@ class BlogPost(db.Model):
     edit_date: Mapped[dt] = mapped_column(DateTime, nullable=True)
     body: Mapped[str] = mapped_column(Text, nullable=False)
     img_url: Mapped[str] = mapped_column(String(250), nullable=False)
-    deleted: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
-    is_draft: Mapped[bool] = mapped_column(Boolean, default=False, nullable=True)
-    tags: Mapped[str] = mapped_column(String, default=json.dumps([]), nullable=True)
+    deleted: Mapped[bool] = mapped_column(Boolean, default=False)
+    is_draft: Mapped[bool] = mapped_column(Boolean, default=False)
+    tags: Mapped[str] = mapped_column(String, default=json.dumps([]))
 
     # Relationships
     author_id: Mapped[int] = mapped_column(Integer, db.ForeignKey("users.id"))
@@ -150,11 +150,9 @@ class BlogComment(db.Model):
     __tablename__ = "blog_comments"
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
     text: Mapped[str] = mapped_column(String, nullable=False)
-    create_date: Mapped[dt] = mapped_column(
-        DateTime, nullable=False
-    )
-    edited: Mapped[bool] = mapped_column(Boolean, default=False, nullable=True)
-    deleted: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
+    create_date: Mapped[dt] = mapped_column(DateTime, nullable=False)
+    edited: Mapped[bool] = mapped_column(Boolean, default=False)
+    deleted: Mapped[bool] = mapped_column(Boolean, default=False)
     # Relationships
     author_id: Mapped[int] = mapped_column(Integer, db.ForeignKey("users.id"))
     post_id: Mapped[int] = mapped_column(Integer, db.ForeignKey("blog_posts.id"))
