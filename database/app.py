@@ -63,6 +63,7 @@ class TopMovies(db.Model):
     def to_dict(self):
         return {
             "id": self.id,
+            "user_id": self.user_id,
             "title": self.title,
             "year": self.year,
             "description": self.description,
@@ -105,7 +106,7 @@ class Ressources(db.Model):
     category: Mapped[str] = mapped_column(String, nullable=False)
     tags: Mapped[str] = mapped_column(String, default=json.dumps([]))
     user_id: Mapped[str] = mapped_column(Integer, ForeignKey("users.id"))
-    added: Mapped[dt] = mapped_column(DateTime, default=func.current_timestamp(), nullable=True)
+    added: Mapped[dt] = mapped_column(DateTime, default=func.current_timestamp())
     description: Mapped[str] = mapped_column(String, nullable=True)
     private: Mapped[bool] = mapped_column(Boolean, default=False)
 
@@ -118,7 +119,7 @@ class Ressources(db.Model):
             "category": self.category,
             "tags": self.tags,
             "user_id": self.user_id,
-            "added": self.added,
+            "added": self.added.isoformat(),
             "description": self.description,
             "private": self.private
         }
@@ -129,21 +130,30 @@ class BlogPost(db.Model):
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
     title: Mapped[str] = mapped_column(String(250), unique=True, nullable=False)
     subtitle: Mapped[str] = mapped_column(String(250), nullable=False)
-    create_date: Mapped[dt] = mapped_column(
-        DateTime, nullable=False
-    )
+    create_date: Mapped[dt] = mapped_column(DateTime, nullable=False)
     edit_date: Mapped[dt] = mapped_column(DateTime, nullable=True)
     body: Mapped[str] = mapped_column(Text, nullable=False)
     img_url: Mapped[str] = mapped_column(String(250), nullable=False)
     deleted: Mapped[bool] = mapped_column(Boolean, default=False)
     is_draft: Mapped[bool] = mapped_column(Boolean, default=False)
     tags: Mapped[str] = mapped_column(String, default=json.dumps([]))
-
-    # Relationships
     author_id: Mapped[int] = mapped_column(Integer, db.ForeignKey("users.id"))
-    comments: Mapped[List["BlogComment"]] = relationship(
-        "BlogComment", back_populates="parent_post"
-    )
+    comments: Mapped[List["BlogComment"]] = relationship("BlogComment", back_populates="parent_post")
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "title": self.title,
+            "subtitle": self.subtitle,
+            "create_date": self.create_date.isoformat(),
+            "edit_date": self.edit_date.isoformat() if self.edit_date else None,
+            "body": self.body,
+            "img_url": self.img_url,
+            "deleted": self.deleted,
+            "is_draft": self.is_draft,
+            "tags": json.loads(self.tags) if self.tags else [],
+            "author_id": self.author_id
+        }
 
 
 class BlogComment(db.Model):
@@ -153,12 +163,20 @@ class BlogComment(db.Model):
     create_date: Mapped[dt] = mapped_column(DateTime, nullable=False)
     edited: Mapped[bool] = mapped_column(Boolean, default=False)
     deleted: Mapped[bool] = mapped_column(Boolean, default=False)
-    # Relationships
     author_id: Mapped[int] = mapped_column(Integer, db.ForeignKey("users.id"))
     post_id: Mapped[int] = mapped_column(Integer, db.ForeignKey("blog_posts.id"))
-    parent_post: Mapped["BlogPost"] = relationship(
-        "BlogPost", back_populates="comments"
-    )
+    parent_post: Mapped["BlogPost"] = relationship("BlogPost", back_populates="comments")
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "text": self.text,
+            "create_date": self.create_date.isoformat(),
+            "edited": self.edited,
+            "deleted": self.deleted,
+            "author_id": self.author_id,
+            "post_id": self.post_id
+        }
 
 
 def create_all(app):
