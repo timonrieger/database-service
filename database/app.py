@@ -151,7 +151,7 @@ class BlogPost(db.Model):
             "img_url": self.img_url,
             "deleted": self.deleted,
             "is_draft": self.is_draft,
-            "tags": json.loads(self.tags) if self.tags else [],
+            "tags": self.tags,
             "author_id": self.author_id
         }
 
