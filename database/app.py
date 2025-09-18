@@ -32,9 +32,10 @@ class AirNomads(db.Model):
     min_nights: Mapped[int] = mapped_column(Integer)
     max_nights: Mapped[int] = mapped_column(Integer)
     travel_countries: Mapped[str] = mapped_column(String)
+    excluded_countries: Mapped[str] = mapped_column(String, server_default="")
     token: Mapped[str] = mapped_column(String, unique=True)
-    min_days_ahead: Mapped[int] = mapped_column(Integer, nullable=False, server_default=1)
-    max_days_ahead: Mapped[int] = mapped_column(Integer, nullable=False, server_default=182)
+    min_days_ahead: Mapped[int] = mapped_column(Integer, server_default=1)
+    max_days_ahead: Mapped[int] = mapped_column(Integer, server_default=182)
 
 
     def to_dict(self):
@@ -48,6 +49,7 @@ class AirNomads(db.Model):
             "min_nights": self.min_nights,
             "max_nights": self.max_nights,
             "travel_countries": self.travel_countries,
+            "excluded_countries": self.excluded_countries,
             "token": self.token,
             "min_days_ahead": self.min_days_ahead,
             "max_days_ahead": self.max_days_ahead
