@@ -26,11 +26,7 @@
     ```
 
 3. Set up environment variables:
-    Create a `.env` file in the root directory and add your configuration settings. Use the external database URL provided by your hosting service. Ensure that all applications interacting with the database use the same connection string:
-    ```env
-    SECRET=your_secret_key
-    DB_URI=your_database_uri
-    ```
+    Copy the `.env.example` file in the root directory to `.env` and add your configuration settings. Use the external database URL provided by your hosting service. Ensure that all applications interacting with the database use the same connection string.
 
 ## Usage
 
@@ -73,6 +69,7 @@ migrate = Migrate(app, db)
 
 Run the following commands to initialize and apply migrations:
 ```bash
+cd database
 flask db init
 flask db stamp head
 flask db migrate
